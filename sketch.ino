@@ -45,11 +45,11 @@ void loop() {
     Serial.print("Reciever value:");
     Serial.println(results.value);
 
-    if (results.value == 32 || results.value == 65568) {
+    if (results.value == 112 || results.value == 65648) {
       Serial.println("Forward");
       myStepper.moveTo(myStepper.currentPosition() - SPEED);
     }
-    if (results.value == 33 || results.value == 65569) {
+    if (results.value == 111 || results.value == 65647) {
       Serial.println("Backward");
       myStepper.moveTo(myStepper.currentPosition() + SPEED);
     }

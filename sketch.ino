@@ -52,7 +52,7 @@ void loop() {
     //If remote sends a unique code when button is keep pressed, used the last value
     if (results.value == KEEPCODE){
       currentValue = lastValue;
-    } else {
+    } else if (results.value == UPCODE || results.value == DOWNCODE){
       lastValue = currentValue = results.value;
     }
 

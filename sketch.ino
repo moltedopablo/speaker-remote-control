@@ -6,8 +6,9 @@
 // Define step constant
 #define MotorInterfaceType 4
 #define SPEED 40
-#define UPCODE 16755030
-#define DOWNCODE 16734630
+#define UPCODE 16605343
+#define DOWNCODE 16621663
+#define KEEPCODE -1
 
 // Define IR Reciever
 int RECV_PIN = 18;
@@ -20,6 +21,8 @@ AccelStepper myStepper(MotorInterfaceType, 14, 16, 15, 17);
 
 // will store last time code was received
 unsigned long previousMillis = 0;
+long lastValue = UPCODE;
+long currentValue = UPCODE;
 
 void setup() {
   // set the maximum speed, acceleration factor and initial speed
@@ -44,13 +47,19 @@ void loop() {
     previousMillis = currentMillis;
 
     Serial.print("Reciever value:");
-    Serial.println(results.value);
+    currentValue = results.value;
+    Serial.println(currentValue);
 
-    if (results.value == UPCODE) {
+    //If remote sends a unique code when button is keep pressed, used the last value
+    if (results.value == UPCODE || currentValue == DOWNCODE){
+      lastValue = currentValue;
+    }
+
+    if (currentValue == UPCODE || (currentValue == KEEPCODE && lastValue == UPCODE)) {
       Serial.println("Forward");
       myStepper.moveTo(myStepper.currentPosition() - SPEED);
     }
-    if (results.value == DOWNCODE) {
+    if (currentValue == DOWNCODE || (currentValue == KEEPCODE && lastValue == DOWNCODE)) {
       Serial.println("Backward");
       myStepper.moveTo(myStepper.currentPosition() + SPEED);
     }
